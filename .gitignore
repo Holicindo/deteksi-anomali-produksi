@@ -10,6 +10,20 @@
 !.yarn/releases
 !.yarn/versions
 
+# Python virtual environment & cache
+venv/
+backend/venv/
+ENV/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+
 # testing
 /coverage
 
@@ -30,7 +44,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
 
 # vercel

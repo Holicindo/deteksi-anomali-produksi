@@ -1,0 +1,16 @@
+product_code,process_code,process_name,work_station,start_time,end_time
+HL-GLASS-10,P01,Pemotongan Kaca,Stasiun Cutting,2026-07-23 08:00:00,2026-07-23 08:12:00
+HL-GLASS-10,P02,Pembersihan Kaca,Stasiun Washing,2026-07-23 08:13:00,2026-07-23 08:20:00
+HL-GLASS-10,P03,Perakitan Frame,Stasiun Assembly,2026-07-23 08:22:00,2026-07-23 09:10:00
+HL-GLASS-10,P04,Inspeksi Ketahanan,Stasiun QC Check,2026-07-23 09:12:00,2026-07-23 09:25:00
+HL-GLASS-10,P05,Pengepakan Unit,Stasiun Packing,2026-07-23 09:26:00,2026-07-23 09:45:00
+HL-GLASS-11,P01,Pemotongan Kaca,Stasiun Cutting,2026-07-23 09:50:00,2026-07-23 10:03:00
+HL-GLASS-11,P02,Pembersihan Kaca,Stasiun Washing,2026-07-23 10:05:00,2026-07-23 10:12:00
+HL-GLASS-11,P03,Perakitan Frame,Stasiun Assembly,2026-07-23 10:15:00,2026-07-23 13:45:00
+HL-GLASS-11,P04,Inspeksi Ketahanan,Stasiun QC Check,2026-07-23 13:48:00,2026-07-23 14:02:00
+HL-GLASS-11,P05,Pengepakan Unit,Stasiun Packing,2026-07-23 14:04:00,2026-07-23 14:25:00
+HL-GLASS-12,P01,Pemotongan Kaca,Stasiun Cutting,2026-07-23 14:30:00,2026-07-23 14:41:00
+HL-GLASS-12,P04,Inspeksi Ketahanan,Stasiun QC Check,2026-07-23 14:43:00,2026-07-23 14:55:00
+HL-GLASS-12,P02,Pembersihan Kaca,Stasiun Washing,2026-07-23 14:57:00,2026-07-23 15:05:00
+HL-GLASS-12,P03,Perakitan Frame,Stasiun Assembly,2026-07-23 19:15:00,2026-07-23 20:00:00
+HL-GLASS-12,P05,Pengepakan Unit,Stasiun Packing,2026-07-23 20:02:00,2026-07-23 20:20:00
