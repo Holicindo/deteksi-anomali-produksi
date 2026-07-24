@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Deteksi Anomali Produksi - PT Holicindo",
-  description: "Sistem deteksi anomali urutan dan waktu proses produksi menggunakan Isolation Forest",
+  title: "Sistem Deteksi Anomali Urutan & Waktu Produksi",
+  description: "Sistem deteksi anomali urutan dan waktu proses produksi menggunakan metode Isolation Forest",
 };
 
 export default function RootLayout({

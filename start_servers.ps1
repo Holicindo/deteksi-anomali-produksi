@@ -2,7 +2,7 @@
 # Jalankan script ini dari terminal PowerShell kamu di dalam folder proyek.
 
 Write-Host "=================================================================" -ForegroundColor Cyan
-Write-Host "         MENJALANKAN SISTEM DETEKSI ANOMALI PT HOLICINDO        " -ForegroundColor Cyan
+Write-Host "         MENJALANKAN SISTEM DETEKSI ANOMALI PRODUKSI            " -ForegroundColor Cyan
 Write-Host "=================================================================" -ForegroundColor Cyan
 Write-Host ""
 

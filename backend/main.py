@@ -35,7 +35,7 @@ in_memory_logs = {}
 in_memory_settings = {"contamination_rate": 0.10}
 
 app = FastAPI(
-    title="PT Holicindo Anomaly Detection API",
+    title="Production Anomaly Detection API",
     description="API untuk mendeteksi anomali urutan dan waktu proses produksi menggunakan Isolation Forest",
     version="1.0.0"
 )
@@ -58,13 +58,13 @@ class LoginRequest(BaseModel):
 
 @app.post("/api/login")
 def login(payload: LoginRequest):
-    if payload.username == "admin" and payload.password == "adminholicindo":
+    if payload.username == "admin" and (payload.password == "admin123" or payload.password == "adminholicindo"):
         return {
             "status": "success",
-            "token": "mock-jwt-token-for-holicindo-admin",
+            "token": "mock-jwt-token-for-admin",
             "user": {
                 "username": "admin",
-                "name": "Administrator Holicindo",
+                "name": "Administrator",
                 "role": "admin"
             }
         }
@@ -75,7 +75,7 @@ def login(payload: LoginRequest):
 def read_root():
     return {
         "status": "online",
-        "message": "PT Holicindo Anomaly Detection API is running.",
+        "message": "Production Anomaly Detection API is running.",
         "database_connected": supabase_client is not None
     }
 

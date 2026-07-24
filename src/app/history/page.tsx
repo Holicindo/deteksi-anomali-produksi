@@ -240,7 +240,7 @@ export default function HistoryPage() {
       <div>
         <h2 className="text-3xl font-extrabold text-slate-100 tracking-tight">Riwayat & Hasil Deteksi Anomali</h2>
         <p className="text-sm text-slate-400 mt-1">
-          Daftar batch log produksi PT Holicindo beserta status klasifikasi anomali Isolation Forest.
+          Daftar batch log produksi beserta status klasifikasi anomali Isolation Forest.
         </p>
       </div>
 

@@ -30,8 +30,8 @@ export default function LoginPage() {
 
       if (res.ok) {
         const data = await res.json();
-        localStorage.setItem("holicindo_token", data.token);
-        localStorage.setItem("holicindo_user", JSON.stringify(data.user));
+        localStorage.setItem("app_token", data.token);
+        localStorage.setItem("app_user", JSON.stringify(data.user));
         router.push("/");
       } else {
         const errData = await res.json();
@@ -40,13 +40,13 @@ export default function LoginPage() {
     } catch (err) {
       console.log("Backend offline, trying offline fallback...", err);
       // Fallback offline (untuk testing instan)
-      if (username === "admin" && password === "adminholicindo") {
-        localStorage.setItem("holicindo_token", "mock-offline-token");
+      if (username === "admin" && (password === "admin123" || password === "adminholicindo")) {
+        localStorage.setItem("app_token", "mock-offline-token");
         localStorage.setItem(
-          "holicindo_user",
+          "app_user",
           JSON.stringify({
             username: "admin",
-            name: "Administrator Holicindo (Demo)",
+            name: "Administrator (Demo)",
             role: "admin",
           })
         );
@@ -74,9 +74,9 @@ export default function LoginPage() {
           <div className="p-4 bg-sky-500/10 rounded-2xl border border-sky-500/20 mb-4 animate-bounce">
             <ShieldAlert className="w-10 h-10 text-sky-400" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-100">PT HOLICINDO</h2>
-          <p className="text-sm text-slate-400 mt-1 text-center">
-            Sistem Deteksi Anomali Urutan & Waktu Produksi
+          <h2 className="text-xl font-bold text-slate-100 text-center tracking-tight">SISTEM DETEKSI ANOMALI</h2>
+          <p className="text-xs text-sky-400 font-medium mt-1 text-center">
+            Urutan & Waktu Proses Produksi (Isolation Forest)
           </p>
         </div>
 
@@ -148,9 +148,10 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-8 text-center text-xs text-slate-600">
-          <p>© 2026 PT Holicindo. All rights reserved.</p>
-          <p className="mt-1">Akun Demo: admin / adminholicindo</p>
+        <div className="mt-8 text-center text-xs text-slate-500 space-y-1">
+          <p>© 2026 <strong className="text-slate-400">Riecka Mutiara</strong> (NPM: 2113211110)</p>
+          <p className="text-[11px] text-slate-600">Teknik Informatika - Universitas Sangga Buana YPKP</p>
+          <p className="pt-2 text-slate-600 text-[11px]">Akun Demo: admin / admin123</p>
         </div>
       </div>
     </div>

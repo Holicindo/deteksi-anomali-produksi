@@ -18,7 +18,7 @@ export default function Sidebar() {
   const [adminName, setAdminName] = useState("Admin");
 
   useEffect(() => {
-    const userStr = localStorage.getItem("holicindo_user");
+    const userStr = localStorage.getItem("app_user");
     if (userStr) {
       const user = JSON.parse(userStr);
       setAdminName(user.name || "Administrator");
@@ -26,8 +26,8 @@ export default function Sidebar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("holicindo_token");
-    localStorage.removeItem("holicindo_user");
+    localStorage.removeItem("app_token");
+    localStorage.removeItem("app_user");
     router.push("/login");
   };
 
@@ -50,8 +50,8 @@ export default function Sidebar() {
             <ShieldAlert className="w-6 h-6 text-sky-400" />
           </div>
           <div>
-            <h1 className="font-bold text-lg text-slate-100 leading-tight">Holicindo</h1>
-            <p className="text-xs text-sky-400 font-semibold tracking-wider uppercase">Anomaly AI</p>
+            <h1 className="font-bold text-sm text-slate-100 leading-tight">Deteksi Anomali</h1>
+            <p className="text-[10px] text-sky-400 font-semibold tracking-wider uppercase">Isolation Forest AI</p>
           </div>
         </div>
 

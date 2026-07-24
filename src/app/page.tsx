@@ -145,7 +145,7 @@ export default function DashboardPage() {
         <div>
           <h2 className="text-3xl font-extrabold text-slate-100 tracking-tight">Dashboard Ringkasan</h2>
           <p className="text-sm text-slate-400 mt-1">
-            Status pengawasan anomali proses produksi PT Holicindo terkini.
+            Status pengawasan anomali proses produksi terkini.
           </p>
         </div>
         

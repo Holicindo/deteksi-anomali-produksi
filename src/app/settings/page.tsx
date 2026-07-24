@@ -92,7 +92,7 @@ export default function SettingsPage() {
         <div>
           <h2 className="text-3xl font-extrabold text-slate-100 tracking-tight">Pengaturan Algoritma AI</h2>
           <p className="text-sm text-slate-400 mt-1">
-            Konfigurasi tingkat sensitivitas Isolation Forest untuk mendeteksi anomali produksi PT Holicindo.
+            Konfigurasi tingkat sensitivitas Isolation Forest untuk mendeteksi anomali proses produksi.
           </p>
         </div>
         {isDemoMode && (
