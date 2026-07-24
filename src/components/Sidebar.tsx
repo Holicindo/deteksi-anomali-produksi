@@ -8,7 +8,8 @@ import {
   History, 
   Settings, 
   LogOut, 
-  ShieldAlert 
+  ShieldAlert,
+  ClipboardList
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -36,27 +37,34 @@ export default function Sidebar() {
 
   const menuItems = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Catat Log Manual", href: "/catat", icon: ClipboardList },
     { name: "Unggah Log", href: "/upload", icon: Upload },
     { name: "Riwayat & Deteksi", href: "/history", icon: History },
     { name: "Pengaturan", href: "/settings", icon: Settings },
   ];
 
   return (
-    <aside className="w-64 fixed inset-y-0 left-0 glass-panel border-r border-slate-800 flex flex-col justify-between z-30">
+    <aside
+      className="w-64 flex flex-col justify-between z-30 relative shrink-0"
+      style={{
+        background: "#060d1a",
+        borderRight: "1px solid rgba(255,255,255,0.05)",
+      }}
+    >
       <div>
         {/* Logo / Title */}
-        <div className="p-6 border-b border-slate-800 flex items-center space-x-3">
-          <div className="p-2 bg-sky-500/20 rounded-lg border border-sky-500/30">
+        <div className="px-7 pt-8 pb-2 flex items-center space-x-3">
+          <div className="p-2 bg-sky-500/15 rounded-xl border border-sky-500/20">
             <ShieldAlert className="w-6 h-6 text-sky-400" />
           </div>
           <div>
-            <h1 className="font-bold text-sm text-slate-100 leading-tight">Deteksi Anomali</h1>
-            <p className="text-[10px] text-sky-400 font-semibold tracking-wider uppercase">Isolation Forest AI</p>
+            <h1 className="font-bold text-sm text-white leading-tight tracking-wide">Deteksi Anomali</h1>
+            <p className="text-[10px] text-sky-400 font-semibold tracking-widest uppercase mt-0.5">CONFIGURE WITH AI</p>
           </div>
         </div>
 
         {/* Navigation Menu */}
-        <nav className="p-4 space-y-1.5">
+        <nav className="px-4 mt-8 space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -65,13 +73,15 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                className={`flex items-center space-x-3 px-5 py-3.5 rounded-full transition-all duration-200 ${
                   isActive
-                    ? "bg-sky-500/20 text-sky-300 border-l-4 border-sky-500 font-medium"
-                    : "text-slate-400 hover:bg-slate-800/40 hover:text-slate-200"
+                    ? "text-white font-semibold border border-sky-500/20 bg-gradient-to-r from-sky-500/15 to-transparent shadow-[0_0_12px_rgba(14,165,233,0.08)]"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-white/5 border border-transparent"
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? "text-sky-300" : "text-slate-400"}`} />
+                <Icon
+                  className={`w-5 h-5 shrink-0 ${isActive ? "text-sky-400" : "text-slate-500"}`}
+                />
                 <span className="text-sm">{item.name}</span>
               </Link>
             );
@@ -80,16 +90,34 @@ export default function Sidebar() {
       </div>
 
       {/* User Info & Logout */}
-      <div className="p-4 border-t border-slate-800">
-        <div className="flex items-center justify-between px-3 py-2 bg-slate-900/60 rounded-xl mb-3 border border-slate-800">
+      <div className="px-4 pb-6 space-y-2">
+        {/* Divider */}
+        <div className="h-px mx-2 mb-4" style={{ background: "rgba(255,255,255,0.06)" }} />
+
+        {/* User Card */}
+        <div
+          className="flex items-center space-x-3 px-4 py-3 rounded-2xl"
+          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+        >
+          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center shrink-0 shadow-lg shadow-sky-500/20">
+            <span className="text-white text-sm font-bold">{adminName.charAt(0).toUpperCase()}</span>
+          </div>
           <div className="overflow-hidden">
-            <p className="text-xs text-slate-400">Masuk sebagai</p>
+            <p className="text-[10px] text-slate-500 font-medium uppercase tracking-widest">Welcome,</p>
             <p className="text-sm font-semibold text-slate-200 truncate">{adminName}</p>
           </div>
         </div>
+
+        {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20 rounded-xl transition-all duration-200 text-sm font-medium"
+          className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-full transition-all duration-200 text-sm font-medium text-slate-400 hover:text-white"
+          style={{
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.07)"
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
+          onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.04)")}
         >
           <LogOut className="w-4 h-4" />
           <span>Keluar Aplikasi</span>

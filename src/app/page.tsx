@@ -13,7 +13,8 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend
+  Legend,
+  LabelList
 } from "recharts";
 import { 
   ShieldAlert, 
@@ -160,63 +161,51 @@ export default function DashboardPage() {
       {/* Metrics Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Total Batch */}
-        <div className="glass-panel p-6 rounded-3xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl group-hover:bg-sky-500/10 transition-all duration-300"></div>
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Batch Log</span>
+        <div className="metric-card p-6">
+          <div className="flex items-center justify-between mb-5">
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Total Batch Log</span>
             <div className="p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
               <Layers className="w-5 h-5" />
             </div>
           </div>
-          <h3 className="text-3xl font-bold text-slate-100">{summary.total_batches}</h3>
-          <p className="text-xs text-slate-400 mt-2 flex items-center">
-            <span>Daftar log yang diunggah</span>
-          </p>
+          <h3 className="text-4xl font-extrabold text-white">{summary.total_batches}</h3>
+          <p className="text-xs text-slate-500 mt-2">Daftar log yang diunggah</p>
         </div>
 
         {/* Total Anomali */}
-        <div className="glass-panel p-6 rounded-3xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-full blur-2xl group-hover:bg-rose-500/10 transition-all duration-300"></div>
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Kasus Anomali</span>
-            <div className="p-2.5 bg-rose-500/10 rounded-xl border border-rose-500/20 text-rose-400">
+        <div className="metric-card p-6">
+          <div className="flex items-center justify-between mb-5">
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Kasus Anomali</span>
+            <div className="p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
               <AlertTriangle className="w-5 h-5" />
             </div>
           </div>
-          <h3 className="text-3xl font-bold text-slate-100">{summary.total_anomalies}</h3>
-          <p className="text-xs text-rose-400 mt-2 flex items-center">
-            <span>Terdeteksi di semua tahapan</span>
-          </p>
+          <h3 className="text-4xl font-extrabold text-white">{summary.total_anomalies}</h3>
+          <p className="text-xs text-rose-400 mt-2">Terdeteksi di semua tahapan</p>
         </div>
 
         {/* Persentase Anomali */}
-        <div className="glass-panel p-6 rounded-3xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl group-hover:bg-indigo-500/10 transition-all duration-300"></div>
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Rasio Penyimpangan</span>
-            <div className="p-2.5 bg-indigo-500/10 rounded-xl border border-indigo-500/20 text-indigo-400">
+        <div className="metric-card p-6">
+          <div className="flex items-center justify-between mb-5">
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Rasio Penyimpangan</span>
+            <div className="p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
               <Activity className="w-5 h-5" />
             </div>
           </div>
-          <h3 className="text-3xl font-bold text-slate-100">{summary.anomaly_percentage}%</h3>
-          <p className="text-xs text-slate-400 mt-2">
-            <span>Dari total {summary.total_steps} langkah proses</span>
-          </p>
+          <h3 className="text-4xl font-extrabold text-white">{summary.anomaly_percentage}%</h3>
+          <p className="text-xs text-slate-500 mt-2">Dari total {summary.total_steps} langkah proses</p>
         </div>
 
         {/* Sensitivitas AI */}
-        <div className="glass-panel p-6 rounded-3xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all duration-300"></div>
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Sensitivitas AI</span>
-            <div className="p-2.5 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400">
+        <div className="metric-card p-6">
+          <div className="flex items-center justify-between mb-5">
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Sensitivitas AI</span>
+            <div className="p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
               <Settings className="w-5 h-5" />
             </div>
           </div>
-          <h3 className="text-3xl font-bold text-slate-100">{contamination * 100}%</h3>
-          <p className="text-xs text-slate-400 mt-2">
-            <span>Parameter Contamination Rate</span>
-          </p>
+          <h3 className="text-4xl font-extrabold text-white">{contamination * 100}%</h3>
+          <p className="text-xs text-slate-500 mt-2">Parameter Contamination Rate</p>
         </div>
       </div>
 
@@ -230,23 +219,38 @@ export default function DashboardPage() {
           </h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={summary.average_process_durations}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="process_name" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: "#1e293b", borderColor: "rgba(255,255,255,0.1)", borderRadius: "12px", color: "#f8fafc" }}
-                  itemStyle={{ color: "#38bdf8" }}
+              <BarChart data={summary.average_process_durations} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(56,189,248,0.10)" />
+                <XAxis
+                  dataKey="process_name"
+                  stroke="rgba(148,163,184,0.5)"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={{ stroke: "rgba(56,189,248,0.20)", strokeWidth: 1 }}
+                  tick={{ fill: "#94a3b8", fontSize: 11 }}
                 />
-                <Bar dataKey="average_duration_minutes" fill="url(#colorDuration)" radius={[8, 8, 0, 0]}>
-                  {summary.average_process_durations.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
+                <YAxis
+                  stroke="rgba(148,163,184,0.3)"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fill: "#64748b", fontSize: 11 }}
+                  tickFormatter={(v) => `${v}m`}
+                  width={36}
+                />
+                <Tooltip 
+                  cursor={{ fill: 'rgba(56,189,248,0.05)' }}
+                  contentStyle={{ backgroundColor: "#0d1b35", borderColor: "rgba(56,189,248,0.2)", borderRadius: "12px", color: "#f8fafc" }}
+                  itemStyle={{ color: "#38bdf8" }}
+                  formatter={(value: number) => [`${value} menit`, "Durasi"]}
+                />
+                <Bar dataKey="average_duration_minutes" fill="url(#colorDuration)" radius={[6, 6, 0, 0]} barSize={70}>
+                  <LabelList dataKey="average_duration_minutes" position="top" fill="#e2e8f0" fontSize={12} fontWeight="bold" />
                 </Bar>
                 <defs>
                   <linearGradient id="colorDuration" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#38bdf8" stopOpacity={0.2}/>
+                    <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.6}/>
+                    <stop offset="95%" stopColor="#38bdf8" stopOpacity={0.1}/>
                   </linearGradient>
                 </defs>
               </BarChart>
@@ -260,27 +264,34 @@ export default function DashboardPage() {
             <ShieldAlert className="w-5 h-5 text-rose-400" />
             <span>Kondisi Hasil Deteksi</span>
           </h3>
-          <div className="h-64 w-full flex items-center justify-center">
+          <div className="h-64 w-full flex items-center justify-center relative">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={5}
+                  innerRadius={65}
+                  outerRadius={88}
+                  paddingAngle={3}
                   dataKey="value"
+                  startAngle={90}
+                  endAngle={-270}
                 >
-                  <Cell fill="#1e293b" stroke="rgba(255,255,255,0.05)" /> {/* Normal */}
+                  <Cell fill="#1e2d45" stroke="rgba(255,255,255,0.03)" /> {/* Normal */}
                   <Cell fill="#fb7185" stroke="rgba(255,255,255,0.05)" /> {/* Anomali */}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#1e293b", borderColor: "rgba(255,255,255,0.1)", borderRadius: "12px" }}
+                  contentStyle={{ backgroundColor: "#0d1b35", borderColor: "rgba(56,189,248,0.2)", borderRadius: "12px" }}
                 />
                 <Legend formatter={(value) => <span className="text-slate-300 text-sm">{value}</span>} />
               </PieChart>
             </ResponsiveContainer>
+            {/* Angka di tengah lingkaran */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style={{paddingBottom: "2rem"}}>
+              <span className="text-4xl font-extrabold text-white leading-none">{summary.total_anomalies}</span>
+              <span className="text-xs text-slate-400 mt-1 font-medium">anomali</span>
+            </div>
           </div>
           <div className="text-center mt-2">
             <p className="text-xs text-slate-400">

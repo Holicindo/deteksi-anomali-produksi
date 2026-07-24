@@ -35,8 +35,8 @@ in_memory_logs = {}
 in_memory_settings = {"contamination_rate": 0.10}
 
 app = FastAPI(
-    title="Production Anomaly Detection API",
-    description="API untuk mendeteksi anomali urutan dan waktu proses produksi menggunakan Isolation Forest",
+    title="Sistem Deteksi Anomali Proses Produksi",
+    description="API untuk mendeteksi anomali urutan dan waktu proses produksi menggunakan metode Isolation Forest",
     version="1.0.0"
 )
 

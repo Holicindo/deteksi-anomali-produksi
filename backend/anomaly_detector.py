@@ -66,44 +66,85 @@ def preprocess_and_detect(df: pd.DataFrame, contamination: float = 0.1) -> pd.Da
     df['anomaly_score'] = np.round(raw_scores, 4)
     df['is_anomaly'] = predictions == -1
     
-    # 6. Analisis Penyebab Anomali (Rule-Based Explainer)
-    # Kami menghitung rata-rata & standar deviasi dari data keseluruhan untuk menentukan batasan
+    # 6. Analisis Penyebab Anomali (Rule-Based Explainer) — Sesuai BAB II skripsi
+    # Hitung statistik baseline dari seluruh data untuk menentukan batas wajar
     mean_duration = df['duration_seconds'].mean()
-    std_duration = df['duration_seconds'].std() if df['duration_seconds'].std() > 0 else 1
-    
+    std_duration  = df['duration_seconds'].std() if df['duration_seconds'].std() > 0 else 1
+
     mean_gap = df['gap_seconds'].mean()
-    std_gap = df['gap_seconds'].std() if df['gap_seconds'].std() > 0 else 1
-    
-    # Cek urutan normal yang paling sering muncul
-    # Kita petakan urutan normal setiap process_code berdasarkan data terbanyak
-    normal_sequences = df.groupby('process_code')['sequence_order'].agg(lambda x: x.value_counts().index[0]).to_dict()
-    
+    std_gap  = df['gap_seconds'].std() if df['gap_seconds'].std() > 0 else 1
+
+    # Batas wajar: mean ± 1.5 * std  (threshold konservatif)
+    threshold_duration_high = mean_duration + 1.5 * std_duration
+    threshold_duration_low  = max(30, mean_duration - 1.5 * std_duration)   # minimal 30 detik
+    threshold_gap_high      = mean_gap + 1.5 * std_gap
+
+    # Tentukan urutan proses yang paling umum (sebagai "urutan normal")
+    # Gunakan mode sequence_order per process_code
+    normal_order = (
+        df.groupby('process_code')['sequence_order']
+        .agg(lambda x: int(x.mode().iloc[0]))
+        .to_dict()
+    )
+
+    # Susun daftar process_code yang seharusnya muncul (berdasarkan seluruh data)
+    all_process_codes = df['process_code'].unique().tolist()
+
     reasons = []
     for idx, row in df.iterrows():
-        if row['is_anomaly']:
-            reason_parts = []
-            
-            # Cek apakah durasi terlalu lama/cepat
-            if row['duration_seconds'] > (mean_duration + 1.5 * std_duration):
-                reason_parts.append("Durasi pengerjaan terlalu lama")
-            elif row['duration_seconds'] < max(5, mean_duration - 1.5 * std_duration):
-                reason_parts.append("Durasi pengerjaan terlalu singkat")
-                
-            # Cek apakah jeda terlalu lama
-            if row['gap_seconds'] > (mean_gap + 1.5 * std_gap):
-                reason_parts.append("Jeda antarproses terlalu lama (idle)")
-                
-            # Cek apakah urutannya aneh dibanding data mayoritas
-            expected_order = normal_sequences.get(row['process_code'], row['sequence_order'])
-            if abs(row['sequence_order'] - expected_order) > 1:
-                reason_parts.append("Urutan aktivitas tidak sesuai standar")
-                
-            if not reason_parts:
-                reason_parts.append("Pola kombinasi urutan & waktu tidak wajar")
-                
-            reasons.append("; ".join(reason_parts))
-        else:
+        if not row['is_anomaly']:
             reasons.append("-")
+            continue
+
+        reason_parts = []
+
+        # ── A. Anomali DURASI ────────────────────────────────────────────────
+        if row['duration_seconds'] > threshold_duration_high:
+            lebih = round((row['duration_seconds'] - mean_duration) / 60, 1)
+            reason_parts.append(
+                f"Durasi pengerjaan terlalu lama (+{lebih} menit dari rata-rata)"
+            )
+        elif row['duration_seconds'] < threshold_duration_low:
+            kurang = round((mean_duration - row['duration_seconds']) / 60, 1)
+            reason_parts.append(
+                f"Durasi pengerjaan terlalu singkat (-{kurang} menit dari rata-rata)"
+            )
+
+        # ── B. Anomali JEDA (idle time) ──────────────────────────────────────
+        if row['gap_seconds'] > threshold_gap_high and row['sequence_order'] > 1:
+            idle_menit = round(row['gap_seconds'] / 60, 1)
+            reason_parts.append(
+                f"Jeda antarproses tidak wajar ({idle_menit} menit idle sebelum proses ini)"
+            )
+
+        # ── C. Anomali URUTAN — proses di luar posisi normal ─────────────────
+        expected_order = normal_order.get(row['process_code'])
+        if expected_order is not None and abs(row['sequence_order'] - expected_order) >= 2:
+            reason_parts.append(
+                f"Urutan proses tidak sesuai standar "
+                f"(posisi ke-{int(row['sequence_order'])}, seharusnya ke-{expected_order})"
+            )
+
+        # ── D. Anomali URUTAN — proses muncul setelah proses yang seharusnya lebih akhir
+        if idx > 0:
+            prev_code  = df.loc[idx - 1, 'process_code']
+            curr_code  = row['process_code']
+            prev_idx_in_all = all_process_codes.index(prev_code) if prev_code in all_process_codes else -1
+            curr_idx_in_all = all_process_codes.index(curr_code) if curr_code in all_process_codes else -1
+            if prev_idx_in_all > curr_idx_in_all >= 0:
+                reason_parts.append(
+                    f"Urutan aktivitas terbalik: {curr_code} muncul setelah {prev_code} "
+                    f"(urutan mundur/proses tertukar)"
+                )
+
+        # ── E. Fallback: pola kombinasi tidak wajar ──────────────────────────
+        if not reason_parts:
+            reason_parts.append(
+                "Pola kombinasi urutan & waktu tidak wajar "
+                f"(skor anomali: {row['anomaly_score']:.3f})"
+            )
+
+        reasons.append("; ".join(reason_parts))
             
     df['anomaly_reason'] = reasons
     

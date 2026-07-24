@@ -76,7 +76,7 @@ export default function LoginPage() {
           </div>
           <h2 className="text-xl font-bold text-slate-100 text-center tracking-tight">SISTEM DETEKSI ANOMALI</h2>
           <p className="text-xs text-sky-400 font-medium mt-1 text-center">
-            Urutan & Waktu Proses Produksi (Isolation Forest)
+            Urutan & Waktu Proses Produksi 
           </p>
         </div>
 
@@ -149,7 +149,7 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-8 text-center text-xs text-slate-500 space-y-1">
-          <p>© 2026 <strong className="text-slate-400">Riecka Mutiara</strong> (NPM: 2113211110)</p>
+          <p>© 2026 <strong className="text-slate-400">Riecka Mutiara</strong></p>
           <p className="text-[11px] text-slate-600">Teknik Informatika - Universitas Sangga Buana YPKP</p>
           <p className="pt-2 text-slate-600 text-[11px]">Akun Demo: admin / admin123</p>
         </div>

@@ -103,7 +103,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Main Settings Card */}
-      <div className="glass-panel p-8 rounded-3xl relative overflow-hidden">
+      <div className="card-sky glass-panel p-8 rounded-2xl relative overflow-hidden backdrop-blur-xl">
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/5 rounded-full blur-3xl"></div>
 
         <form onSubmit={handleSaveSettings} className="space-y-8">

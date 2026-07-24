@@ -276,10 +276,10 @@ export default function HistoryPage() {
                 <div
                   key={batch.id}
                   onClick={() => setSelectedBatchId(batch.id)}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all duration-200 flex items-center justify-between group ${
+                  className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 flex items-center justify-between group ${
                     isSelected
-                      ? "bg-sky-500/10 border-sky-500/50 shadow-md shadow-sky-500/5"
-                      : "bg-slate-900/30 border-slate-800/80 hover:border-slate-700/60 hover:bg-slate-900/50"
+                      ? "bg-sky-500/15 border-sky-400/40 shadow-[0_0_16px_rgba(14,165,233,0.15)]"
+                      : "bg-[rgba(9,15,31,0.5)] border-sky-500/8 hover:border-sky-500/20 hover:bg-sky-500/5"
                   }`}
                 >
                   <div className="space-y-1.5 overflow-hidden pr-2">
@@ -327,7 +327,7 @@ export default function HistoryPage() {
           {selectedBatch ? (
             <>
               {/* Header Informasi Batch */}
-              <div className="pb-6 border-b border-slate-800/80 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0">
+              <div className="pb-5 border-b border-sky-500/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0">
                 <div>
                   <h3 className="text-xl font-bold text-slate-200">{selectedBatch.batch_name}</h3>
                   <p className="text-xs text-slate-500 mt-1">
@@ -336,7 +336,7 @@ export default function HistoryPage() {
                 </div>
                 
                 <div className="flex gap-3">
-                  <div className="px-4 py-2 bg-slate-900/60 border border-slate-800 rounded-2xl text-center">
+                  <div className="px-4 py-2 bg-[rgba(9,15,31,0.7)] border border-sky-500/15 rounded-xl text-center">
                     <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total Langkah</p>
                     <p className="text-base font-bold text-slate-200 mt-0.5">{selectedBatch.total_steps}</p>
                   </div>
@@ -350,7 +350,17 @@ export default function HistoryPage() {
               </div>
 
               {/* Tabel Logs */}
-              <div className="flex-1 overflow-y-auto mt-6 pr-1">
+              <div className="flex-1 overflow-y-auto mt-4 pr-1">
+                {/* Keterangan Skala Skor Isolation Forest */}
+                <div className="mb-4 px-4 py-3 bg-sky-500/5 border border-sky-500/10 rounded-xl flex items-start space-x-3">
+                  <span className="text-sky-400 mt-0.5 shrink-0 text-base">ℹ</span>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    <strong className="text-sky-400">Skor Anomali Isolation Forest:</strong>{" "}
+                    Nilai mendekati <strong className="text-rose-400">1.0</strong> = sangat menyimpang (anomali kuat) —
+                    mendekati <strong className="text-emerald-400">0.0</strong> = sesuai pola normal.
+                    Threshold aktif: <strong className="text-slate-300">{selectedBatch.contamination_rate_used * 100}%</strong> contamination rate.
+                  </p>
+                </div>
                 {loadingDetails ? (
                   <div className="flex flex-col items-center justify-center h-full space-y-3">
                     <RefreshCw className="w-8 h-8 animate-spin text-sky-400" />
@@ -381,12 +391,12 @@ export default function HistoryPage() {
                                 setExpandedLogId(isExpanded ? null : log.id);
                               }
                             }}
-                            className={`grid grid-cols-12 items-center px-4 py-3 bg-slate-900/30 border rounded-2xl transition-all duration-150 ${
+                            className={`grid grid-cols-12 items-center px-4 py-3 border rounded-xl transition-all duration-150 ${
                               hasAnomaly 
                                 ? isExpanded
                                   ? "border-red-500 bg-red-500/10 cursor-pointer shadow-md shadow-red-500/5" 
-                                  : "border-red-500/30 hover:border-red-500/50 bg-red-500/5 cursor-pointer"
-                                : "border-slate-800/80 hover:border-slate-700/60"
+                                  : "border-red-500/25 hover:border-red-500/45 bg-red-500/5 cursor-pointer"
+                                : "bg-[rgba(9,15,31,0.5)] border-sky-500/8 hover:border-sky-500/18"
                             }`}
                           >
                             {/* Sequence */}

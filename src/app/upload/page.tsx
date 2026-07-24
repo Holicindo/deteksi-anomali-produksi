@@ -97,53 +97,93 @@ export default function UploadPage() {
     // Urutkan berdasarkan start_time
     rows.sort((a, b) => new Date(a[startIdx]).getTime() - new Date(b[startIdx]).getTime());
 
-    // Proses fitur dan deteksi sederhana
-    for (let i = 0; i < rows.length; i++) {
-      const cols = rows[i];
+    // Hitung durasi dan gap dulu untuk semua baris agar bisa statistik dinamis
+    const parsed = rows.map((cols, i) => {
       const start = new Date(cols[startIdx]);
-      const end = new Date(cols[endIdx]);
-      
+      const end   = new Date(cols[endIdx]);
       const durationSeconds = Math.round((end.getTime() - start.getTime()) / 1000);
       let gapSeconds = 0;
       if (i > 0) {
         const prevEnd = new Date(rows[i - 1][endIdx]);
         gapSeconds = Math.max(0, Math.round((start.getTime() - prevEnd.getTime()) / 1000));
       }
+      return { cols, start, end, durationSeconds, gapSeconds };
+    });
 
-      // Deteksi anomali rule-based (untuk simulasi offline)
-      let isAnomaly = false;
+    // Hitung statistik baseline (mean & std) seperti di backend Python
+    const allDurations = parsed.map(p => p.durationSeconds);
+    const allGaps      = parsed.map(p => p.gapSeconds);
+    const meanDur  = allDurations.reduce((a, b) => a + b, 0) / allDurations.length;
+    const stdDur   = Math.sqrt(allDurations.map(d => Math.pow(d - meanDur, 2)).reduce((a, b) => a + b, 0) / allDurations.length) || 1;
+    const meanGap  = allGaps.reduce((a, b) => a + b, 0) / allGaps.length;
+    const stdGap   = Math.sqrt(allGaps.map(g => Math.pow(g - meanGap, 2)).reduce((a, b) => a + b, 0) / allGaps.length) || 1;
+
+    const threshDurHigh = meanDur + 1.5 * stdDur;
+    const threshDurLow  = Math.max(30, meanDur - 1.5 * stdDur);
+    const threshGapHigh = meanGap + 1.5 * stdGap;
+
+    // Daftar process_code dalam urutan kemunculan pertama (sebagai "urutan normal")
+    const normalOrderMap: Record<string, number> = {};
+    parsed.forEach((p, i) => {
+      const code = p.cols[procCodeIdx];
+      if (!(code in normalOrderMap)) normalOrderMap[code] = i + 1;
+    });
+
+    // Proses fitur dan deteksi dengan rule yang sesuai backend
+    for (let i = 0; i < parsed.length; i++) {
+      const { cols, start, end, durationSeconds, gapSeconds } = parsed[i];
       const reasons: string[] = [];
 
-      // 1. Durasi terlalu lama (> 1.5 jam / 5400 detik)
-      if (durationSeconds > 5400) {
-        isAnomaly = true;
-        reasons.push("Durasi pengerjaan terlalu lama");
+      // A. Durasi terlalu lama
+      if (durationSeconds > threshDurHigh) {
+        const lebih = ((durationSeconds - meanDur) / 60).toFixed(1);
+        reasons.push(`Durasi pengerjaan terlalu lama (+${lebih} menit dari rata-rata)`);
       }
-      
-      // 2. Jeda terlalu lama (> 2 jam / 7200 detik)
-      if (gapSeconds > 7200) {
-        isAnomaly = true;
-        reasons.push("Jeda antarproses terlalu lama (idle)");
+      // B. Durasi terlalu singkat
+      else if (durationSeconds < threshDurLow) {
+        const kurang = ((meanDur - durationSeconds) / 60).toFixed(1);
+        reasons.push(`Durasi pengerjaan terlalu singkat (-${kurang} menit dari rata-rata)`);
       }
 
-      // 3. Urutan salah (misal: P04 muncul sebelum P02)
+      // C. Jeda terlalu lama
+      if (gapSeconds > threshGapHigh && i > 0) {
+        const idleMenit = (gapSeconds / 60).toFixed(1);
+        reasons.push(`Jeda antarproses tidak wajar (${idleMenit} menit idle sebelum proses ini)`);
+      }
+
+      // D. Urutan di luar posisi normal
+      const currCode    = cols[procCodeIdx];
+      const expectedPos = normalOrderMap[currCode] ?? (i + 1);
+      if (Math.abs((i + 1) - expectedPos) >= 2) {
+        reasons.push(`Urutan proses tidak sesuai standar (posisi ke-${i + 1}, seharusnya ke-${expectedPos})`);
+      }
+
+      // E. Urutan terbalik dengan proses sebelumnya
       if (i > 0) {
-        const prevCode = rows[i - 1][procCodeIdx];
-        const curCode = cols[procCodeIdx];
-        if (prevCode === "P04" && curCode === "P02") {
-          isAnomaly = true;
-          reasons.push("Urutan aktivitas tidak sesuai standar");
+        const prevCode = parsed[i - 1].cols[procCodeIdx];
+        const prevPos  = normalOrderMap[prevCode] ?? 0;
+        const currPos  = normalOrderMap[currCode] ?? 0;
+        if (prevPos > currPos && currPos > 0) {
+          reasons.push(`Urutan aktivitas terbalik: ${currCode} muncul setelah ${prevCode} (proses tertukar)`);
         }
       }
 
-      if (isAnomaly) {
-        anomaliesCount++;
+      const isAnomaly = reasons.length > 0;
+      if (isAnomaly) anomaliesCount++;
+
+      // Fallback jika tidak ada rule yang terpicu tapi skor tinggi
+      const anomalyScore = isAnomaly
+        ? parseFloat((0.75 + Math.random() * 0.20).toFixed(3))
+        : parseFloat((0.15 + Math.random() * 0.25).toFixed(3));
+
+      if (isAnomaly && reasons.length === 0) {
+        reasons.push(`Pola kombinasi urutan & waktu tidak wajar (skor anomali: ${anomalyScore.toFixed(3)})`);
       }
 
       logs.push({
         id: `mock-log-${i}-${Math.random().toString(36).substr(2, 9)}`,
         product_code: cols[pCodeIdx],
-        process_code: cols[procCodeIdx],
+        process_code: currCode,
         process_name: cols[nameIdx],
         work_station: cols[wsIdx],
         start_time: start.toISOString(),
@@ -151,7 +191,7 @@ export default function UploadPage() {
         duration_seconds: durationSeconds,
         gap_seconds: gapSeconds,
         sequence_order: i + 1,
-        anomaly_score: isAnomaly ? 0.78 + Math.random() * 0.15 : 0.25 + Math.random() * 0.2,
+        anomaly_score: anomalyScore,
         is_anomaly: isAnomaly,
         anomaly_reason: isAnomaly ? reasons.join("; ") : "-"
       });
@@ -272,7 +312,7 @@ export default function UploadPage() {
         </p>
       </div>
 
-      <div className="glass-panel p-8 rounded-3xl relative overflow-hidden">
+      <div className="card-sky glass-panel p-8 rounded-2xl relative overflow-hidden backdrop-blur-xl">
         {/* Glow effect */}
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/5 rounded-full blur-3xl"></div>
 
