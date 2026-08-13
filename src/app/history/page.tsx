@@ -84,6 +84,7 @@ export default function HistoryPage() {
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [expandedLogId, setExpandedLogId] = useState<string | null>(null);
   const [isDemoMode, setIsDemoMode] = useState(false);
+  const [isMobileListExpanded, setIsMobileListExpanded] = useState(false);
 
   // Ambil daftar batch
   const fetchBatches = async (autoSelectFirst = true) => {
@@ -140,6 +141,7 @@ export default function HistoryPage() {
     const fetchLogs = async () => {
       setLoadingDetails(true);
       setExpandedLogId(null);
+      setIsMobileListExpanded(false);
       
       // 1. Cek dulu apakah batch_id ini milik custom batch di localStorage
       const customLogsStr = localStorage.getItem("holicindo_custom_logs") || "{}";
@@ -246,7 +248,7 @@ export default function HistoryPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* KOLOM KIRI: Daftar Batch */}
-        <div className="glass-panel rounded-3xl p-6 h-[75vh] flex flex-col">
+        <div className="glass-panel rounded-3xl p-6 h-auto max-h-[60vh] lg:h-[75vh] lg:max-h-none flex flex-col">
           {/* Pencarian */}
           <div className="relative mb-4">
             <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
@@ -323,7 +325,7 @@ export default function HistoryPage() {
         </div>
 
         {/* KOLOM KANAN: Detail Log Batch Terpilih */}
-        <div className="glass-panel rounded-3xl p-6 h-[75vh] lg:col-span-2 flex flex-col">
+        <div className="glass-panel rounded-3xl p-6 h-auto min-h-[60vh] lg:h-[75vh] lg:col-span-2 flex flex-col">
           {selectedBatch ? (
             <>
               {/* Header Informasi Batch */}
@@ -379,12 +381,12 @@ export default function HistoryPage() {
                     </div>
 
                     {/* Baris Logs */}
-                    {batchDetails.map((log) => {
+                    {batchDetails.map((log, index) => {
                       const isExpanded = expandedLogId === log.id;
                       const hasAnomaly = log.is_anomaly;
 
                       return (
-                        <div key={log.id} className="space-y-1">
+                        <div key={log.id} className={`space-y-1 ${!isMobileListExpanded && index >= 10 ? 'hidden lg:block' : ''}`}>
                           <div
                             onClick={() => {
                               if (hasAnomaly) {
@@ -464,6 +466,29 @@ export default function HistoryPage() {
                         </div>
                       );
                     })}
+
+                    {/* Button Lihat Semua / Tutup Sebagian untuk Mobile */}
+                    {batchDetails.length > 10 && (
+                      <div className="lg:hidden flex justify-center mt-6">
+                        {!isMobileListExpanded ? (
+                          <button 
+                            onClick={() => setIsMobileListExpanded(true)}
+                            className="px-5 py-2.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 text-xs font-bold rounded-full border border-sky-500/20 transition-all flex items-center space-x-2"
+                          >
+                            <span>Tampilkan Semua {batchDetails.length} Proses</span>
+                            <ChevronDown className="w-4 h-4" />
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => setIsMobileListExpanded(false)}
+                            className="px-5 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 text-slate-400 hover:text-slate-300 text-xs font-bold rounded-full border border-slate-700/50 transition-all flex items-center space-x-2"
+                          >
+                            <span>Tutup Sebagian (Tampilkan 10)</span>
+                            <ChevronUp className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

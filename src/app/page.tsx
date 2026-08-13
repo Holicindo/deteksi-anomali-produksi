@@ -25,7 +25,10 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  ArrowUpRight
+  ArrowUpRight,
+  ClipboardList,
+  Upload,
+  History
 } from "lucide-react";
 
 interface DashboardSummary {
@@ -140,9 +143,9 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 max-w-7xl mx-auto">
       {/* Top Welcome Panel */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="col-span-1 lg:col-span-12 order-1 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-3xl font-extrabold text-slate-100 tracking-tight">Dashboard Ringkasan</h2>
           <p className="text-sm text-slate-400 mt-1">
@@ -159,60 +162,58 @@ export default function DashboardPage() {
       </div>
 
       {/* Metrics Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="col-span-1 lg:col-span-12 order-3 lg:order-2 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {/* Total Batch */}
-        <div className="metric-card p-6">
-          <div className="flex items-center justify-between mb-5">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Total Batch Log</span>
-            <div className="p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
-              <Layers className="w-5 h-5" />
+        <div className="metric-card p-4 md:p-6 w-full">
+          <div className="flex items-center justify-between mb-4 md:mb-5">
+            <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Total Batch</span>
+            <div className="p-2 md:p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
+              <Layers className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <h3 className="text-4xl font-extrabold text-white">{summary.total_batches}</h3>
-          <p className="text-xs text-slate-500 mt-2">Daftar log yang diunggah</p>
+          <h3 className="text-2xl md:text-4xl font-extrabold text-white">{summary.total_batches}</h3>
+          <p className="text-[10px] md:text-xs text-slate-500 mt-1 md:mt-2">Log diunggah</p>
         </div>
 
         {/* Total Anomali */}
-        <div className="metric-card p-6">
-          <div className="flex items-center justify-between mb-5">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Kasus Anomali</span>
-            <div className="p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
-              <AlertTriangle className="w-5 h-5" />
+        <div className="metric-card p-4 md:p-6 w-full">
+          <div className="flex items-center justify-between mb-4 md:mb-5">
+            <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Kasus Anomali</span>
+            <div className="p-2 md:p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
+              <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <h3 className="text-4xl font-extrabold text-white">{summary.total_anomalies}</h3>
-          <p className="text-xs text-rose-400 mt-2">Terdeteksi di semua tahapan</p>
+          <h3 className="text-2xl md:text-4xl font-extrabold text-white">{summary.total_anomalies}</h3>
+          <p className="text-[10px] md:text-xs text-rose-400 mt-1 md:mt-2">Terdeteksi</p>
         </div>
 
         {/* Persentase Anomali */}
-        <div className="metric-card p-6">
-          <div className="flex items-center justify-between mb-5">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Rasio Penyimpangan</span>
-            <div className="p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
-              <Activity className="w-5 h-5" />
+        <div className="metric-card p-4 md:p-6 w-full">
+          <div className="flex items-center justify-between mb-4 md:mb-5">
+            <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Penyimpangan</span>
+            <div className="p-2 md:p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
+              <Activity className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <h3 className="text-4xl font-extrabold text-white">{summary.anomaly_percentage}%</h3>
-          <p className="text-xs text-slate-500 mt-2">Dari total {summary.total_steps} langkah proses</p>
+          <h3 className="text-2xl md:text-4xl font-extrabold text-white">{summary.anomaly_percentage}%</h3>
+          <p className="text-[10px] md:text-xs text-slate-500 mt-1 md:mt-2">Dari {summary.total_steps} langkah</p>
         </div>
 
         {/* Sensitivitas AI */}
-        <div className="metric-card p-6">
-          <div className="flex items-center justify-between mb-5">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Sensitivitas AI</span>
-            <div className="p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
-              <Settings className="w-5 h-5" />
+        <div className="metric-card p-4 md:p-6 w-full">
+          <div className="flex items-center justify-between mb-4 md:mb-5">
+            <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Sensitivitas AI</span>
+            <div className="p-2 md:p-2.5 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
+              <Settings className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <h3 className="text-4xl font-extrabold text-white">{contamination * 100}%</h3>
-          <p className="text-xs text-slate-500 mt-2">Parameter Contamination Rate</p>
+          <h3 className="text-2xl md:text-4xl font-extrabold text-white">{contamination * 100}%</h3>
+          <p className="text-[10px] md:text-xs text-slate-500 mt-1 md:mt-2">Contamination Rate</p>
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart 1: Rata-rata Durasi Proses */}
-        <div className="glass-panel p-6 rounded-3xl lg:col-span-2">
+      {/* Chart 1: Rata-rata Durasi Proses */}
+      <div className="col-span-1 lg:col-span-8 order-4 lg:order-3 glass-panel p-6 rounded-3xl">
           <h3 className="text-lg font-bold text-slate-200 mb-6 flex items-center space-x-2">
             <Clock className="w-5 h-5 text-sky-400" />
             <span>Rata-rata Durasi Proses Produksi (Menit)</span>
@@ -258,53 +259,52 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Chart 2: Komposisi Normal vs Anomali */}
-        <div className="glass-panel p-6 rounded-3xl">
-          <h3 className="text-lg font-bold text-slate-200 mb-6 flex items-center space-x-2">
-            <ShieldAlert className="w-5 h-5 text-rose-400" />
-            <span>Kondisi Hasil Deteksi</span>
-          </h3>
-          <div className="h-64 w-full flex items-center justify-center relative">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={65}
-                  outerRadius={88}
-                  paddingAngle={3}
-                  dataKey="value"
-                  startAngle={90}
-                  endAngle={-270}
-                >
-                  <Cell fill="#1e2d45" stroke="rgba(255,255,255,0.03)" /> {/* Normal */}
-                  <Cell fill="#fb7185" stroke="rgba(255,255,255,0.05)" /> {/* Anomali */}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ backgroundColor: "#0d1b35", borderColor: "rgba(56,189,248,0.2)", borderRadius: "12px" }}
-                />
-                <Legend formatter={(value) => <span className="text-slate-300 text-sm">{value}</span>} />
-              </PieChart>
-            </ResponsiveContainer>
-            {/* Angka di tengah lingkaran */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style={{paddingBottom: "2rem"}}>
-              <span className="text-4xl font-extrabold text-white leading-none">{summary.total_anomalies}</span>
-              <span className="text-xs text-slate-400 mt-1 font-medium">anomali</span>
-            </div>
+      {/* Chart 2: Komposisi Normal vs Anomali */}
+      <div className="col-span-1 lg:col-span-4 order-2 lg:order-4 glass-panel p-5 md:p-6 rounded-3xl flex justify-between items-center">
+        {/* Left Info */}
+        <div className="flex flex-col space-y-2">
+          <h3 className="text-2xl font-bold text-white tracking-wide">Deteksi</h3>
+          <p className="text-sm font-medium">
+            <span className="text-rose-400">{summary.total_anomalies} Anomali</span> <span className="text-slate-500">dari {summary.total_steps}</span>
+          </p>
+          <div className="pt-2">
+            <span className="inline-block px-3.5 py-1.5 bg-slate-800/80 rounded-xl text-xs text-slate-300 font-semibold border border-slate-700/50">
+              {summary.total_steps - summary.total_anomalies} Normal
+            </span>
           </div>
-          <div className="text-center mt-2">
-            <p className="text-xs text-slate-400">
-              Sebanyak <strong className="text-rose-400">{summary.total_anomalies}</strong> aktivitas diidentifikasi memiliki deviasi pola.
-            </p>
+        </div>
+
+        {/* Right Chart */}
+        <div className="h-28 w-28 md:h-32 md:w-32 relative shrink-0">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                innerRadius="75%"
+                outerRadius="100%"
+                paddingAngle={0}
+                dataKey="value"
+                startAngle={90}
+                endAngle={-270}
+                stroke="none"
+                cornerRadius={10}
+              >
+                <Cell fill="#1e2d45" /> {/* Normal - Background abu gelap */}
+                <Cell fill="#fb7185" /> {/* Anomali - Aktif warna Rose */}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span className="text-xl md:text-2xl font-bold text-white tracking-tighter">
+              {summary.total_steps > 0 ? Math.round((summary.total_anomalies / summary.total_steps) * 100) : 0}%
+            </span>
           </div>
         </div>
       </div>
-
-      {/* High Risk Stations & Recent Batches Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Stasiun Kerja Paling Berisiko */}
-        <div className="glass-panel p-6 rounded-3xl">
+      {/* Stasiun Kerja Paling Berisiko */}
+      <div className="col-span-1 lg:col-span-6 order-5 glass-panel p-6 rounded-3xl">
           <h3 className="text-lg font-bold text-slate-200 mb-4 flex items-center space-x-2">
             <AlertTriangle className="w-5 h-5 text-amber-400" />
             <span>Stasiun Kerja Rentan Anomali</span>
@@ -333,41 +333,40 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Batch Baru Diunggah */}
-        <div className="glass-panel p-6 rounded-3xl">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold text-slate-200">Riwayat Unggahan Terbaru</h3>
-            <Link href="/history" className="text-xs text-sky-400 hover:text-sky-300 font-semibold flex items-center space-x-1 transition-all">
-              <span>Lihat Semua</span>
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="space-y-3">
-            {summary.batches_summary.map((batch) => (
-              <div key={batch.batch_name} className="flex items-center justify-between p-4 bg-slate-900/40 border border-slate-800/80 rounded-2xl hover:border-slate-700/60 transition-all duration-200 group">
-                <div>
-                  <h4 className="text-sm font-semibold text-slate-200">{batch.batch_name}</h4>
-                  <p className="text-xs text-slate-500 mt-1">{formatDate(batch.uploaded_at)}</p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  {batch.anomaly_count > 0 ? (
-                    <span className="text-xs font-semibold px-2.5 py-1 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-full flex items-center space-x-1.5">
-                      <AlertTriangle className="w-3.5 h-3.5" />
-                      <span>{batch.anomaly_count} Anomali</span>
-                    </span>
-                  ) : (
-                    <span className="text-xs font-semibold px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center space-x-1.5">
-                      <CheckCircle className="w-3.5 h-3.5" />
-                      <span>Bersih</span>
-                    </span>
-                  )}
-                  <Link href="/history" className="p-1.5 bg-slate-800/50 group-hover:bg-sky-500/10 rounded-lg border border-slate-700 group-hover:border-sky-500/30 text-slate-400 group-hover:text-sky-400 transition-all">
-                    <ArrowUpRight className="w-4 h-4" />
-                  </Link>
-                </div>
+      {/* Batch Baru Diunggah */}
+      <div className="col-span-1 lg:col-span-6 order-6 glass-panel p-6 rounded-3xl">
+        <div className="flex justify-between items-start sm:items-center mb-5 gap-4">
+          <h3 className="text-lg font-bold text-slate-200 leading-tight">Riwayat Unggahan Terbaru</h3>
+          <Link href="/history" className="shrink-0 text-xs text-sky-400 hover:text-sky-300 font-semibold flex items-center space-x-1 transition-all mt-1 sm:mt-0 bg-sky-500/10 px-3 py-1.5 rounded-full border border-sky-500/20">
+            <span>Lihat Semua</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+        <div className="space-y-3">
+          {summary.batches_summary.map((batch) => (
+            <div key={batch.batch_name} className="flex items-center justify-between p-4 bg-slate-900/40 border border-slate-800/80 rounded-2xl hover:border-slate-700/60 transition-all duration-200 group">
+              <div>
+                <h4 className="text-sm font-semibold text-slate-200">{batch.batch_name}</h4>
+                <p className="text-xs text-slate-500 mt-1">{formatDate(batch.uploaded_at)}</p>
               </div>
-            ))}
-          </div>
+              <div className="flex items-center space-x-4">
+                {batch.anomaly_count > 0 ? (
+                  <span className="text-xs font-semibold px-2.5 py-1 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-full flex items-center space-x-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    <span>{batch.anomaly_count} Anomali</span>
+                  </span>
+                ) : (
+                  <span className="text-xs font-semibold px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center space-x-1.5">
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    <span>Bersih</span>
+                  </span>
+                )}
+                <Link href="/history" className="p-1.5 bg-slate-800/50 group-hover:bg-sky-500/10 rounded-lg border border-slate-700 group-hover:border-sky-500/30 text-slate-400 group-hover:text-sky-400 transition-all">
+                  <ArrowUpRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

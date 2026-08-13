@@ -9,7 +9,8 @@ import {
   Settings, 
   LogOut, 
   ShieldAlert,
-  ClipboardList
+  ClipboardList,
+  ArrowLeft
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -130,9 +131,15 @@ export default function Sidebar() {
       {/* MOBILE TOP BAR (Logo + User Profile) */}
       <div className="md:hidden flex items-center justify-between px-5 py-4 z-30 shrink-0 sticky top-0 shadow-xl" style={{ background: "rgba(6, 13, 26, 0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
         <div className="flex items-center space-x-3">
-          <div className="p-2 bg-sky-500/15 rounded-xl border border-sky-500/20">
-            <ShieldAlert className="w-5 h-5 text-sky-400" />
-          </div>
+          {pathname !== "/" ? (
+            <button onClick={() => router.back()} className="p-2 bg-slate-800/50 hover:bg-slate-700/50 rounded-xl text-slate-300 transition-colors">
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          ) : (
+            <div className="p-2 bg-sky-500/15 rounded-xl border border-sky-500/20">
+              <ShieldAlert className="w-5 h-5 text-sky-400" />
+            </div>
+          )}
           <div>
             <h1 className="font-bold text-sm text-white leading-tight">Deteksi Anomali</h1>
           </div>
@@ -148,42 +155,59 @@ export default function Sidebar() {
       </div>
 
       {/* MOBILE BOTTOM NAV */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around px-2 py-2 pb-safe" 
-           style={{ 
-             background: "rgba(6, 13, 26, 0.95)", 
-             backdropFilter: "blur(20px)",
-             WebkitBackdropFilter: "blur(20px)",
-             borderTop: "1px solid rgba(255,255,255,0.05)",
-             paddingBottom: "env(safe-area-inset-bottom, 16px)"
-           }}>
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
-          
-          let shortName = item.name;
-          if (item.name === "Catat Log Manual") shortName = "Catat";
-          if (item.name === "Unggah Log") shortName = "Unggah";
-          if (item.name === "Riwayat & Deteksi") shortName = "Riwayat";
+      <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 pb-safe">
+        <style>{`
+          @keyframes shine {
+            0% { transform: translateX(-150%) skewX(-12deg); }
+            50% { transform: translateX(150%) skewX(-12deg); }
+            100% { transform: translateX(150%) skewX(-12deg); }
+          }
+        `}</style>
+        <nav className="flex items-center justify-around px-2 py-3 bg-[rgba(6,13,26,0.95)] backdrop-blur-xl border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] rounded-3xl relative">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+            const isCenterBtn = item.name === "Unggah Log";
+            
+            let shortName = item.name;
+            if (item.name === "Catat Log Manual") shortName = "Catat";
+            if (item.name === "Unggah Log") shortName = "Unggah";
+            if (item.name === "Riwayat & Deteksi") shortName = "Riwayat";
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="relative flex flex-col items-center justify-center w-full py-1"
-            >
-              <div className={`p-1.5 rounded-xl transition-all duration-300 ${isActive ? 'bg-sky-500/20 text-sky-400' : 'bg-transparent text-slate-500'}`}>
-                <Icon className={`w-5 h-5 mb-0.5`} />
-              </div>
-              <span className={`text-[10px] mt-1 transition-colors duration-300 ${isActive ? "text-sky-400 font-semibold" : "text-slate-500"}`}>
-                {shortName}
-              </span>
-              {isActive && (
-                <div className="absolute top-0 w-8 h-1 bg-sky-400 rounded-b-full shadow-[0_2px_8px_rgba(56,189,248,0.5)]"></div>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="relative flex flex-col items-center justify-center w-full"
+              >
+                {isCenterBtn ? (
+                  <div className="flex flex-col items-center -mt-8">
+                    <div className="relative overflow-hidden p-3.5 bg-gradient-to-tr from-sky-500 to-indigo-500 rounded-full text-white border-[6px] border-[#0a1122]">
+                      <Icon className="w-6 h-6 relative z-10" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent w-[150%]" style={{ animation: 'shine 2.5s infinite linear' }}></div>
+                    </div>
+                    <span className={`text-[10px] mt-1 font-bold ${isActive ? "text-sky-400" : "text-slate-400"}`}>
+                      {shortName}
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <div className={`p-1.5 rounded-xl transition-all duration-300 ${isActive ? 'bg-sky-500/10 text-sky-400' : 'bg-transparent text-slate-500'}`}>
+                      <Icon className="w-5 h-5 mb-0.5" />
+                    </div>
+                    <span className={`text-[10px] mt-0.5 transition-colors duration-300 ${isActive ? "text-sky-400 font-semibold" : "text-slate-500"}`}>
+                      {shortName}
+                    </span>
+                    {isActive && (
+                      <div className="absolute -top-3 w-8 h-1 bg-sky-400 rounded-b-full shadow-[0_2px_8px_rgba(56,189,248,0.5)]"></div>
+                    )}
+                  </>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
     </>
   );
 }
