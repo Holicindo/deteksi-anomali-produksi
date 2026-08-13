@@ -85,7 +85,7 @@ export default function UploadPage() {
     let anomaliesCount = 0;
     
     // Kumpulkan data baris
-    const rows = [];
+    const rows: any[] = [];
     for (let i = 1; i < lines.length; i++) {
       if (!lines[i].trim()) continue;
       // Simple CSV split (not handling commas inside quotes, but fine for sample logs)
