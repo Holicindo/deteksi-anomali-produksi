@@ -242,7 +242,7 @@ export default function DashboardPage() {
                   cursor={{ fill: 'rgba(56,189,248,0.05)' }}
                   contentStyle={{ backgroundColor: "#0d1b35", borderColor: "rgba(56,189,248,0.2)", borderRadius: "12px", color: "#f8fafc" }}
                   itemStyle={{ color: "#38bdf8" }}
-                  formatter={(value: number) => [`${value} menit`, "Durasi"]}
+                  formatter={(value: any) => [`${value} menit`, "Durasi"]}
                 />
                 <Bar dataKey="average_duration_minutes" fill="url(#colorDuration)" radius={[6, 6, 0, 0]} barSize={70}>
                   <LabelList dataKey="average_duration_minutes" position="top" fill="#e2e8f0" fontSize={12} fontWeight="bold" />
