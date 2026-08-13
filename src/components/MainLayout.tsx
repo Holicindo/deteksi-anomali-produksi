@@ -15,35 +15,30 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <AuthWrapper>
-      {/* Outer scroll container — kalau di-zoom, konten tidak mengecil, keluar scrollbar */}
-      <div className="overflow-auto" style={{ width: "100vw", height: "100vh", background: "var(--sidebar-bg)" }}>
-        {/* Inner fixed minimum size — komposisi dipertahankan */}
-        <div className="flex" style={{ minWidth: "1280px", minHeight: "720px", width: "100%", height: "100%" }}>
+      {/* Container utama responsif */}
+      <div className="flex flex-col md:flex-row w-full h-screen overflow-hidden" style={{ background: "var(--sidebar-bg)" }}>
 
-          <Sidebar />
+        <Sidebar />
 
-          {/* Main content — rounded hanya di kiri */}
-          <main
-            className="flex-1 flex flex-col overflow-hidden relative"
-            style={{
-              background: "var(--app-bg)",
-              borderRadius: "1.5rem 0 0 1.5rem",
-            }}
-          >
-            {/* Subtle glow orb */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 w-[800px] h-[400px] bg-sky-500/8 rounded-full blur-[120px] pointer-events-none"></div>
+        {/* Main content — membulat hanya di kiri pada desktop */}
+        <main
+          className="flex-1 flex flex-col relative overflow-hidden transition-all duration-300 md:rounded-l-[2rem]"
+          style={{
+            background: "var(--app-bg)",
+          }}
+        >
+          {/* Subtle glow orb */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 w-[800px] h-[400px] bg-sky-500/8 rounded-full blur-[120px] pointer-events-none"></div>
 
-            <div className="flex-1 overflow-y-auto p-6 md:p-8 relative z-10">
-              <div className="max-w-7xl mx-auto w-full">
-                {children}
-              </div>
-              <div className="max-w-7xl mx-auto w-full mt-auto">
-                <Footer />
-              </div>
+          <div className="flex-1 overflow-y-auto p-4 pb-28 md:p-8 md:pb-8 relative z-10">
+            <div className="max-w-7xl mx-auto w-full">
+              {children}
             </div>
-          </main>
-
-        </div>
+            <div className="max-w-7xl mx-auto w-full mt-10">
+              <Footer />
+            </div>
+          </div>
+        </main>
       </div>
     </AuthWrapper>
   );
